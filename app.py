@@ -5,7 +5,7 @@ import plotly.express as px
 # 1. Page Config
 st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
 
-# Custom CSS to make it look "Premium"
+# Custom CSS for a clean look
 st.markdown("""
     <style>
     .main { background-color: #f8f9fa; }
@@ -33,7 +33,6 @@ st.divider()
 # --- 4. EXPENSE CHART ---
 st.subheader("📊 Detailed Expense Distribution")
 
-# Finalized category mapping incorporating laddus and kitchen/food handling supplies
 chart_data = {
     "Category": [
         "Food Procurement, Ingredients, Laddus & Supplies",
@@ -45,27 +44,23 @@ chart_data = {
     ],
     "Amount": [1885.87, 860.00, 630.52, 300.00, 197.87, 150.00]
 }
-df = pd.DataFrame(chart_data)
+df_exp = pd.DataFrame(chart_data)
+df_exp = df_exp.sort_values(by="Amount", ascending=True)
 
-# Sort from largest to smallest for a polished display hierarchy
-df = df.sort_values(by="Amount", ascending=True)
-
-# Create Chart with Premium Colors (Golden/Navy palette)
 fig = px.bar(
-    df, 
+    df_exp, 
     x="Amount", 
     y="Category", 
     orientation='h',
     text="Amount",
-    color_discrete_sequence=['#D4AF37'] # Professional Gold color
+    color_discrete_sequence=['#D4AF37']
 )
 
-# Proper Amount Formatting inside the bars for flawless mobile viewing
+# FIXED: 'auto' allows text labels to slide cleanly outside short bars instead of turning vertical
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
-    textposition='inside',
+    textposition='auto',
     textfont=dict(color='black', size=13),
-    insidetextanchor='end', 
     marker_line_color='#1f3b4d',
     marker_line_width=1.5,
     opacity=0.8
@@ -79,20 +74,54 @@ fig.update_layout(
         showgrid=True,
         gridcolor='#e1e1e1'
     ),
-    yaxis=dict(
-        title=""
-    ),
+    yaxis=dict(title=""),
     font=dict(size=14),
-    margin=dict(l=20, r=20, t=20, b=20), 
+    margin=dict(l=20, r=40, t=20, b=20), # Increased right margin to prevent outside labels from clipping
     height=450 
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
-# --- 5. FOOTER ---
 st.divider()
 
-# Left column for verification note, right column for the live view counter badge
+# --- 5. DONORS SECTION ---
+st.subheader("🙏 Community Donors")
+
+donor_records = {
+    "Donor Name": [
+        "Nagaraja Chokkavarapu", "Sarath Kolla", "Jayaram Varadha", "Praveen Pulla", 
+        "Anil Bondalapati", "Jayaprakash Divvela", "Vara Prasad Saini", "Rajashekar Raini", 
+        "Raj Manikonda", "Srini Banda", "Sathish Mallamula", "Rajasekhar Raja", 
+        "Ravi Meda", "Madhu Kopparapu", "Pardha Karamsetty", "Prasada Tripuramalla", "Saritha Meda"
+    ],
+    "Contribution": [
+        256.00, 151.00, 116.00, 116.00, 
+        116.00, 116.00, 116.00, 116.00, 
+        116.00, 116.00, 116.00, 116.00, 
+        116.00, 116.00, 101.00, 51.00, 50.00
+    ]
+}
+df_donors = pd.DataFrame(donor_records)
+
+# Interactive Search Bar for Community Members
+search_query = st.text_input("🔍 Search donor by name:", "").strip()
+if search_query:
+    df_donors = df_donors[df_donors["Donor Name"].str.contains(search_query, case=False)]
+
+# Formatted table presentation
+df_display = df_donors.copy()
+df_display["Contribution"] = df_display["Contribution"].map("${:,.2f}".format)
+
+st.dataframe(
+    df_display, 
+    column_config={"Donor Name": "Donor Name", "Contribution": "Amount Given"},
+    use_container_width=True,
+    hide_index=True
+)
+
+# --- 6. FOOTER ---
+st.divider()
+
 foot_c1, foot_c2 = st.columns([3, 1])
 with foot_c1:
     st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
