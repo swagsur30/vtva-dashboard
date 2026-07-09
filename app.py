@@ -56,7 +56,7 @@ fig = px.bar(
     color_discrete_sequence=['#D4AF37']
 )
 
-# FIXED: 'auto' handles positioning dynamically so small numbers ($150, $197) display outside clearly
+# Text positions to 'auto' to ensure text slides cleanly outside the bars
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
     textposition='auto',
@@ -76,7 +76,7 @@ fig.update_layout(
     ),
     yaxis=dict(title=""),
     font=dict(size=14),
-    margin=dict(l=20, r=60, t=20, b=20), # Right margin padded to guarantee outside text stays perfectly visible
+    margin=dict(l=20, r=60, t=20, b=20), 
     height=450 
 )
 
@@ -90,8 +90,8 @@ with foot_c1:
     st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
 
 with foot_c2:
-    # FIXED: Replaced unreliable hits.io with a stable dynamic shield tracking counter badge
-    st.markdown(
-        '<div style="text-align: right;"><img src="https://tinyhits.io/tracker/page?id=vtva_kalyanam_dashboard&style=flat-square&color=goldenrod" alt="Views"></div>', 
-        unsafe_allow_html=True
+    # Native Streamlit Image engine ensures rendering on live deployments
+    st.image(
+        "https://tinyhits.io/tracker/page?id=vtva_kalyanam_dashboard_live&style=flat-square&color=goldenrod",
+        use_container_width=False
     )
