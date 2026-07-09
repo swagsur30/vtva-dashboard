@@ -14,11 +14,11 @@ st.markdown("""
     .vasavi-box {
         text-align: center;
         background-color: #fff9e6;
-        border: 2px solid #ffcc80;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+        border: 1.5px solid #ffcc80;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0px 1px 4px rgba(0,0,0,0.05);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -35,15 +35,15 @@ live_views = st.session_state['live_counter_metrics']
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
 st.markdown("<p style='font-size: 18px; color: #555555; margin-top: -15px; font-weight: 500;'>📅 Event Date: June 7, 2026</p>", unsafe_allow_html=True)
 
-# --- COMMUNITY DEDICATION SECTION (TEXT-BASED) ---
+# --- CONDENSED COMMUNITY DEDICATION SECTION ---
 st.markdown('---')
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2, col3 = st.columns([1.5, 3, 1.5])
 with col2:
     st.markdown(
         """
         <div class="vasavi-box">
-            <span style="font-size: 24px; font-weight: bold; color: #b37400; letter-spacing: 1px;">🙏 Jai Vasavi 🙏</span><br>
-            <div style="margin-top: 8px; font-size: 15px; color: #734d00; font-style: italic; font-weight: 500;">
+            <span style="font-size: 18px; font-weight: bold; color: #b37400; letter-spacing: 0.5px;">🙏 Jai Vasavi Matha 🙏</span>
+            <div style="font-size: 13px; color: #734d00; font-style: italic; margin-top: 2px;">
                 Seeking the divine blessings of Sri Vasavi Matha
             </div>
         </div>
