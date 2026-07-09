@@ -2,61 +2,85 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# 1. Page Configuration (Sets title and wide layout)
-st.set_page_config(page_title="VTVA Event Dashboard", layout="centered", page_icon="📊")
+# 1. Page Config
+st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
 
-# 2. Main Title
-st.title("📊 VTVA Event Financial Dashboard")
-st.markdown("A high-level summary of expenses and donations for the recent community event.")
-st.markdown("---")
+# Custom CSS to make it look "Premium"
+st.markdown("""
+    <style>
+    .main { background-color: #f8f9fa; }
+    div[data-testid="stMetricValue"] { font-size: 28px; color: #1f3b4d; }
+    </style>
+    """, unsafe_content_ok=True)
 
-# 3. Quick Summary Cards (Key Metrics)
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.metric(label="Total Expenses", value="$4,614.31")
-with col2:
-    st.metric(label="Total Donations", value="$2,001.00")
-with col3:
-    st.metric(label="Net Funding Required", value="$2,613.31")
+# 2. Header Section
+st.title("🏛️ VTVA Event Financial Summary")
+st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
-st.markdown("---")
-st.markdown("### 📈 Expense Breakdown by Category")
+# --- DATA PREPARATION ---
+# Edit these numbers whenever you need to update the site
+total_exp = 4614.31
+donations = 2001.00
+net_funding = total_exp - donations
 
-# 4. Preparing the Data for Charting
-data = {
+# --- 3. KEY METRICS ---
+# We use f-strings to add the $ and commas automatically
+c1, c2, c3 = st.columns(3)
+c1.metric("Total Expenses", f"${total_exp:,.2f}")
+c2.metric("Total Donations", f"${donations:,.2f}")
+# We make the funding requirement stand out
+c3.metric("Net Funding Required", f"${net_funding:,.2f}", delta_color="inverse")
+
+st.divider()
+
+# --- 4. EXPENSE CHART ---
+st.subheader("📊 Expense Distribution")
+
+chart_data = {
     "Category": [
-        "Supplies, Flowers & Grocery", 
-        "Food & Catering Setup", 
-        "Event Operations (Priests, Security, Cleaners)", 
-        "Sweets Prep (Laddus)", 
-        "A/V & Admin (DJ, etc.)"
+        "Supplies & Grocery", 
+        "Catering Setup", 
+        "Operations (Priests/Security)", 
+        "Sweets (Laddus)", 
+        "A/V & Admin"
     ],
     "Amount": [1820.60, 1160.58, 1160.00, 275.26, 197.87]
 }
-df = pd.DataFrame(data)
+df = pd.DataFrame(chart_data)
 
-# 5. Creating an Interactive Horizontal Bar Chart
+# Create Chart with Premium Colors (Golden/Navy palette)
 fig = px.bar(
     df, 
     x="Amount", 
     y="Category", 
-    orientation='h', 
+    orientation='h',
     text="Amount",
-    color="Amount", 
-    color_continuous_scale="Blues",
-    labels={"Amount": "Amount ($)"}
+    color_discrete_sequence=['#D4AF37'] # Professional Gold color
 )
 
-# Customizing chart appearance
-fig.update_traces(texttemplate='$%{text:,.2f}', textposition='outside')
+# FIXED: Proper Amount Formatting on the chart
+fig.update_traces(
+    texttemplate='$%{text:,.2f}', 
+    textposition='outside',
+    marker_line_color='#1f3b4d',
+    marker_line_width=1.5,
+    opacity=0.8
+)
+
 fig.update_layout(
-    yaxis={'categoryorder':'total ascending'}, 
-    showlegend=False,
-    margin=dict(l=20, r=50, t=20, b=20)
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Amount in USD ($)",
+    yaxis_title="",
+    xaxis_showgrid=True,
+    gridcolor='#e1e1e1',
+    font=dict(size=14),
+    margin=dict(l=20, r=100, t=20, b=20), # Extra space for labels
+    height=400
 )
 
-# Display chart in Streamlit app (Typo fixed here!)
 st.plotly_chart(fig, use_container_width=True)
 
-st.markdown("---")
-st.caption("📑 Data verified against the master spreadsheet 'Summary' tab.")
+# --- 5. FOOTER ---
+st.divider()
+st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
