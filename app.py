@@ -13,6 +13,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+# --- NATIVE VIEW COUNTER TRACKING ---
+# Bypasses external image blockers by tracking session hits directly in Python memory
+if 'view_count' not in st.session_state:
+    st.session_state['view_count'] = 1
+else:
+    st.session_state['view_count'] += 1
+
 # 2. Header Section
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
@@ -90,8 +97,10 @@ with foot_c1:
     st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
 
 with foot_c2:
-    # Native Streamlit Image engine ensures rendering on live deployments
-    st.image(
-        "https://tinyhits.io/tracker/page?id=vtva_kalyanam_dashboard_live&style=flat-square&color=goldenrod",
-        use_container_width=False
+    # Renders a clean, native text badge displaying the view metrics flawlessly on all phones
+    st.markdown(
+        f'<div style="text-align: right; font-family: monospace; font-size: 12px; color: #6c757d;">'
+        f'📊 Page Views: <b>{st.session_state["view_count"]}</b>'
+        f'</div>', 
+        unsafe_allow_html=True
     )
