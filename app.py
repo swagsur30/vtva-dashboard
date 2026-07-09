@@ -13,8 +13,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Header Section
-st.title("🏛️ VTVA Event Financial Summary")
+# 2. Header Section (UPDATED TITLE HERE)
+st.title("🏛️ VTVA Kalyanam Event Financial Summary")
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
 # --- DATA PREPARATION ---
@@ -55,30 +55,30 @@ fig = px.bar(
     color_discrete_sequence=['#D4AF37'] # Professional Gold color
 )
 
-# Proper Amount Formatting on the chart
+# Proper Amount Formatting inside the bars for flawless mobile viewing
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
-    textposition='outside',
+    textposition='inside',
+    textfont=dict(color='black', size=13),
+    insidetextanchor='end', 
     marker_line_color='#1f3b4d',
     marker_line_width=1.5,
     opacity=0.8
 )
 
-# FIXED: Added 'range=[0, 2200]' to force extra empty space on the right side!
 fig.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     paper_bgcolor='rgba(0,0,0,0)',
     xaxis=dict(
         title="Amount in USD ($)",
         showgrid=True,
-        gridcolor='#e1e1e1',
-        range=[0, 2200] 
+        gridcolor='#e1e1e1'
     ),
     yaxis=dict(
         title=""
     ),
     font=dict(size=14),
-    margin=dict(l=20, r=50, t=20, b=20), 
+    margin=dict(l=20, r=20, t=20, b=20), 
     height=400
 )
 
