@@ -13,7 +13,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Header Section (UPDATED TITLE HERE)
+# 2. Header Section
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
@@ -31,19 +31,24 @@ c3.metric("VTVA Funds Used", f"${net_funding:,.2f}", delta_color="inverse")
 st.divider()
 
 # --- 4. EXPENSE CHART ---
-st.subheader("📊 Expense Distribution")
+st.subheader("📊 Detailed Expense Distribution")
 
+# Finalized category mapping incorporating laddus and kitchen/food handling supplies
 chart_data = {
     "Category": [
-        "Supplies & Grocery", 
-        "Catering Setup", 
-        "Operations (Priests/Security)", 
-        "Sweets (Laddus)", 
-        "A/V & Admin"
+        "Food Procurement, Ingredients, Laddus & Supplies",
+        "Venue Operations & Cleaning",
+        "Pooja Supplies & Flowers",
+        "Priest Dakshina",
+        "Audio/Visual & Vastram",
+        "Venue Cooking Helpers"
     ],
-    "Amount": [1820.60, 1160.58, 1160.00, 275.26, 197.87]
+    "Amount": [1885.87, 860.00, 630.52, 300.00, 197.87, 150.00]
 }
 df = pd.DataFrame(chart_data)
+
+# Sort from largest to smallest for a polished display hierarchy
+df = df.sort_values(by="Amount", ascending=True)
 
 # Create Chart with Premium Colors (Golden/Navy palette)
 fig = px.bar(
@@ -79,11 +84,21 @@ fig.update_layout(
     ),
     font=dict(size=14),
     margin=dict(l=20, r=20, t=20, b=20), 
-    height=400
+    height=450 
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
 # --- 5. FOOTER ---
 st.divider()
-st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
+
+# Left column for verification note, right column for the live view counter badge
+foot_c1, foot_c2 = st.columns([3, 1])
+with foot_c1:
+    st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
+
+with foot_c2:
+    st.markdown(
+        '<div style="text-align: right;"><img src="https://counter.hits.io/vtva-dashboard.svg" alt="Hits"></div>', 
+        unsafe_allow_html=True
+    )
