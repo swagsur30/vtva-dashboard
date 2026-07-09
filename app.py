@@ -90,7 +90,8 @@ with foot_c1:
     st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
 
 with foot_c2:
+    # FIXED: Replaced unreliable hits.io with a stable dynamic shield tracking counter badge
     st.markdown(
-        '<div style="text-align: right;"><img src="https://counter.hits.io/vtva-dashboard.svg" alt="Hits"></div>', 
+        '<div style="text-align: right;"><img src="https://tinyhits.io/tracker/page?id=vtva_kalyanam_dashboard&style=flat-square&color=goldenrod" alt="Views"></div>', 
         unsafe_allow_html=True
     )
