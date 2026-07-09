@@ -6,17 +6,24 @@ import time
 # 1. Page Config
 st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
 
-# Custom CSS for a clean look
+# Custom CSS for a clean, premium look
 st.markdown("""
     <style>
     .main { background-color: #f8f9fa; }
     div[data-testid="stMetricValue"] { font-size: 28px; color: #1f3b4d; }
+    .vasavi-box {
+        text-align: center;
+        background-color: #fff9e6;
+        border: 1px solid #ffe0b3;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # --- RESILIENT RUNTIME HIT COUNTER ---
 if 'live_counter_metrics' not in st.session_state:
-    # ADJUSTED: Baseline modified to start seamlessly from 45
     st.session_state['live_counter_metrics'] = 45 + int(time.time() % 10)
 else:
     st.session_state['live_counter_metrics'] += 1
@@ -26,6 +33,22 @@ live_views = st.session_state['live_counter_metrics']
 # 2. Header Section
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
 st.markdown("<p style='font-size: 18px; color: #555555; margin-top: -15px; font-weight: 500;'>📅 Event Date: June 7, 2026</p>", unsafe_allow_html=True)
+
+# --- COMMUNITY DEDICATION SECTION ---
+st.markdown('---')
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown(
+        """
+        <div class="vasavi-box">
+            <img src="https://i.imgur.com/W2bMhZ4.jpeg" width="160" style="border-radius: 8px; margin-bottom: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.15);"><br>
+            <span style="font-size: 20px; font-weight: bold; color: #b37400;">🙏 Jai Vasavi 🙏</span><br>
+            <span style="font-size: 14px; color: #734d00; font-style: italic;">Seeking the divine blessings of Sri Vasavi Matha</span>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
 # --- DATA PREPARATION ---
