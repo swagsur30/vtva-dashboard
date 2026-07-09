@@ -11,7 +11,7 @@ st.markdown("""
     .main { background-color: #f8f9fa; }
     div[data-testid="stMetricValue"] { font-size: 28px; color: #1f3b4d; }
     </style>
-    """, unsafe_content_ok=True)
+    """, unsafe_allow_html=True)
 
 # 2. Header Section
 st.title("🏛️ VTVA Event Financial Summary")
@@ -24,11 +24,9 @@ donations = 2001.00
 net_funding = total_exp - donations
 
 # --- 3. KEY METRICS ---
-# We use f-strings to add the $ and commas automatically
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Expenses", f"${total_exp:,.2f}")
 c2.metric("Total Donations", f"${donations:,.2f}")
-# We make the funding requirement stand out
 c3.metric("Net Funding Required", f"${net_funding:,.2f}", delta_color="inverse")
 
 st.divider()
@@ -58,7 +56,7 @@ fig = px.bar(
     color_discrete_sequence=['#D4AF37'] # Professional Gold color
 )
 
-# FIXED: Proper Amount Formatting on the chart
+# Proper Amount Formatting on the chart
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
     textposition='outside',
@@ -75,7 +73,7 @@ fig.update_layout(
     xaxis_showgrid=True,
     gridcolor='#e1e1e1',
     font=dict(size=14),
-    margin=dict(l=20, r=100, t=20, b=20), # Extra space for labels
+    margin=dict(l=20, r=100, t=20, b=20), # Extra space for labels on mobile
     height=400
 )
 
