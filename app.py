@@ -56,7 +56,7 @@ fig = px.bar(
     color_discrete_sequence=['#D4AF37']
 )
 
-# FIXED: 'auto' allows text labels to slide cleanly outside short bars instead of turning vertical
+# FIXED: 'auto' handles positioning dynamically so small numbers ($150, $197) display outside clearly
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
     textposition='auto',
@@ -76,50 +76,13 @@ fig.update_layout(
     ),
     yaxis=dict(title=""),
     font=dict(size=14),
-    margin=dict(l=20, r=40, t=20, b=20), # Increased right margin to prevent outside labels from clipping
+    margin=dict(l=20, r=60, t=20, b=20), # Right margin padded to guarantee outside text stays perfectly visible
     height=450 
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
-st.divider()
-
-# --- 5. DONORS SECTION ---
-st.subheader("🙏 Community Donors")
-
-donor_records = {
-    "Donor Name": [
-        "Nagaraja Chokkavarapu", "Sarath Kolla", "Jayaram Varadha", "Praveen Pulla", 
-        "Anil Bondalapati", "Jayaprakash Divvela", "Vara Prasad Saini", "Rajashekar Raini", 
-        "Raj Manikonda", "Srini Banda", "Sathish Mallamula", "Rajasekhar Raja", 
-        "Ravi Meda", "Madhu Kopparapu", "Pardha Karamsetty", "Prasada Tripuramalla", "Saritha Meda"
-    ],
-    "Contribution": [
-        256.00, 151.00, 116.00, 116.00, 
-        116.00, 116.00, 116.00, 116.00, 
-        116.00, 116.00, 116.00, 116.00, 
-        116.00, 116.00, 101.00, 51.00, 50.00
-    ]
-}
-df_donors = pd.DataFrame(donor_records)
-
-# Interactive Search Bar for Community Members
-search_query = st.text_input("🔍 Search donor by name:", "").strip()
-if search_query:
-    df_donors = df_donors[df_donors["Donor Name"].str.contains(search_query, case=False)]
-
-# Formatted table presentation
-df_display = df_donors.copy()
-df_display["Contribution"] = df_display["Contribution"].map("${:,.2f}".format)
-
-st.dataframe(
-    df_display, 
-    column_config={"Donor Name": "Donor Name", "Contribution": "Amount Given"},
-    use_container_width=True,
-    hide_index=True
-)
-
-# --- 6. FOOTER ---
+# --- 5. FOOTER ---
 st.divider()
 
 foot_c1, foot_c2 = st.columns([3, 1])
