@@ -26,7 +26,8 @@ net_funding = total_exp - donations
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Expenses", f"${total_exp:,.2f}")
 c2.metric("Total Donations", f"${donations:,.2f}")
-c3.metric("Net Funding Required", f"${net_funding:,.2f}", delta_color="inverse")
+# CHANGED: Label updated to "VTVA Funds Used"
+c3.metric("VTVA Funds Used", f"${net_funding:,.2f}", delta_color="inverse")
 
 st.divider()
 
@@ -64,7 +65,7 @@ fig.update_traces(
     opacity=0.8
 )
 
-# FIXED: Moved gridcolor into the xaxis dictionary block!
+# FIXED: Increased right margin (r=150) so the $1,820.60 label never gets cut off!
 fig.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     paper_bgcolor='rgba(0,0,0,0)',
@@ -77,7 +78,7 @@ fig.update_layout(
         title=""
     ),
     font=dict(size=14),
-    margin=dict(l=20, r=100, t=20, b=20), 
+    margin=dict(l=20, r=150, t=20, b=20), 
     height=400
 )
 
