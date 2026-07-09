@@ -18,7 +18,6 @@ st.title("🏛️ VTVA Event Financial Summary")
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
 # --- DATA PREPARATION ---
-# Edit these numbers whenever you need to update the site
 total_exp = 4614.31
 donations = 2001.00
 net_funding = total_exp - donations
@@ -65,15 +64,20 @@ fig.update_traces(
     opacity=0.8
 )
 
+# FIXED: Moved gridcolor into the xaxis dictionary block!
 fig.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     paper_bgcolor='rgba(0,0,0,0)',
-    xaxis_title="Amount in USD ($)",
-    yaxis_title="",
-    xaxis_showgrid=True,
-    gridcolor='#e1e1e1',
+    xaxis=dict(
+        title="Amount in USD ($)",
+        showgrid=True,
+        gridcolor='#e1e1e1'
+    ),
+    yaxis=dict(
+        title=""
+    ),
     font=dict(size=14),
-    margin=dict(l=20, r=100, t=20, b=20), # Extra space for labels on mobile
+    margin=dict(l=20, r=100, t=20, b=20), 
     height=400
 )
 
