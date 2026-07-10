@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import time
 
 # 1. Page Config
 st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
@@ -38,13 +37,20 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- RESILIENT RUNTIME HIT COUNTER ---
-if 'live_counter_metrics' not in st.session_state:
-    st.session_state['live_counter_metrics'] = 45 + int(time.time() % 10)
-else:
-    st.session_state['live_counter_metrics'] += 1
+# --- GLOBAL RUNTIME HIT COUNTER (PERSISTENT ACROSS SESSIONS) ---
+@st.cache_resource
+def get_global_counter():
+    # Shared across all user sessions in server memory
+    return {"views": 45}
 
-live_views = st.session_state['live_counter_metrics']
+global_counter = get_global_counter()
+
+# Increment only once when a user initializes their tab session
+if 'counted_this_session' not in st.session_state:
+    global_counter["views"] += 1
+    st.session_state['counted_this_session'] = True
+
+live_views = global_counter["views"]
 
 # 2. Header Section
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
@@ -110,7 +116,7 @@ fig = px.bar(
 
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
-    textposition='inside', # Forces text inside the bars for flawless mobile contrast
+    textposition='inside', # High-contrast text position inside the bars for small mobile screens
     textfont=dict(size=12), 
     marker_line_color='#1f3b4d',
     marker_line_width=1,
@@ -123,10 +129,10 @@ fig.update_layout(
     xaxis=dict(
         title="Amount in USD ($)",
         showgrid=True,
-        gridcolor='rgba(128, 128, 128, 0.2)' # Soft grid lines visible on light & dark
+        gridcolor='rgba(128, 128, 128, 0.2)' # Adaptive soft grid lines
     ),
     yaxis=dict(title=""),
-    font=dict(size=12), # Smaller text size for comfortable smartphone reading
+    font=dict(size=12), 
     margin=dict(l=10, r=10, t=15, b=15), 
     height=400 
 )
