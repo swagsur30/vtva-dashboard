@@ -6,19 +6,34 @@ import time
 # 1. Page Config
 st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
 
-# Custom CSS for a clean, premium look
+# Custom CSS optimized for BOTH Light and Dark Mobile themes
 st.markdown("""
     <style>
-    .main { background-color: #f8f9fa; }
-    div[data-testid="stMetricValue"] { font-size: 28px; color: #1f3b4d; }
+    /* Metric label & value adaptation */
+    div[data-testid="stMetricValue"] { 
+        font-size: 26px !important; 
+    }
+    /* Devotional box that respects light/dark background contrast safely */
     .vasavi-box {
         text-align: center;
-        background-color: #fff9e6;
-        border: 1.5px solid #ffcc80;
-        padding: 8px 12px;
+        background-color: rgba(255, 249, 230, 0.15);
+        border: 2px solid #ffcc80;
+        padding: 10px;
         border-radius: 8px;
         margin-bottom: 15px;
-        box-shadow: 0px 1px 4px rgba(0,0,0,0.05);
+    }
+    .vasavi-title {
+        font-size: 18px; 
+        font-weight: bold; 
+        color: #b37400; 
+        letter-spacing: 0.5px;
+    }
+    /* Subtitle styling that works on dark and light phone screens */
+    .mobile-subtitle {
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: -15px;
+        margin-bottom: 15px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -33,17 +48,17 @@ live_views = st.session_state['live_counter_metrics']
 
 # 2. Header Section
 st.title("🏛️ VTVA Kalyanam Event Financial Summary")
-st.markdown("<p style='font-size: 18px; color: #555555; margin-top: -15px; font-weight: 500;'>📅 Event Date: June 7, 2026</p>", unsafe_allow_html=True)
+st.markdown('<p class="mobile-subtitle">📅 Event Date: June 7, 2026</p>', unsafe_allow_html=True)
 
 # --- CONDENSED COMMUNITY DEDICATION SECTION ---
-st.markdown('---')
-col1, col2, col3 = st.columns([1.5, 3, 1.5])
+st.divider()
+col1, col2, col3 = st.columns([0.5, 5, 0.5])
 with col2:
     st.markdown(
         """
         <div class="vasavi-box">
-            <span style="font-size: 18px; font-weight: bold; color: #b37400; letter-spacing: 0.5px;">🙏 Jai Vasavi Matha 🙏</span>
-            <div style="font-size: 13px; color: #734d00; font-style: italic; margin-top: 2px;">
+            <span class="vasavi-title">🙏 Jai Vasavi Matha 🙏</span>
+            <div style="font-size: 13px; font-style: italic; margin-top: 4px;">
                 Seeking the divine blessings of Sri Vasavi Matha
             </div>
         </div>
@@ -62,16 +77,16 @@ net_funding = total_exp - donations
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Expenses", f"${total_exp:,.2f}")
 c2.metric("Total Donations", f"${donations:,.2f}")
-c3.metric("VTVA Funds Used", f"${net_funding:,.2f}", delta_color="inverse")
+c3.metric("VTVA Funds Used", f"${net_funding:,.2f}")
 
 st.divider()
 
-# --- 4. EXPENSE CHART ---
+# --- 4. EXPENSE CHART & DATA ---
 st.subheader("📊 Detailed Expense Distribution")
 
 chart_data = {
     "Category": [
-        "Food Procurement, Ingredients, Laddus & Supplies",
+        "Food Procurement & Supplies",
         "Venue Operations & Cleaning",
         "Pooja Supplies & Flowers",
         "Priest Dakshina",
@@ -81,10 +96,11 @@ chart_data = {
     "Amount": [1885.87, 860.00, 630.52, 300.00, 197.87, 150.00]
 }
 df_exp = pd.DataFrame(chart_data)
-df_exp = df_exp.sort_values(by="Amount", ascending=True)
+df_exp_sorted = df_exp.sort_values(by="Amount", ascending=True)
 
+# Plotly Horizontal Bar Chart
 fig = px.bar(
-    df_exp, 
+    df_exp_sorted, 
     x="Amount", 
     y="Category", 
     orientation='h',
@@ -94,11 +110,11 @@ fig = px.bar(
 
 fig.update_traces(
     texttemplate='$%{text:,.2f}', 
-    textposition='auto',
-    textfont=dict(color='black', size=13),
+    textposition='inside', # Forces text inside the bars for flawless mobile contrast
+    textfont=dict(size=12), 
     marker_line_color='#1f3b4d',
-    marker_line_width=1.5,
-    opacity=0.8
+    marker_line_width=1,
+    opacity=0.9
 )
 
 fig.update_layout(
@@ -107,27 +123,42 @@ fig.update_layout(
     xaxis=dict(
         title="Amount in USD ($)",
         showgrid=True,
-        gridcolor='#e1e1e1'
+        gridcolor='rgba(128, 128, 128, 0.2)' # Soft grid lines visible on light & dark
     ),
     yaxis=dict(title=""),
-    font=dict(size=14),
-    margin=dict(l=20, r=60, t=20, b=20), 
-    height=450 
+    font=dict(size=12), # Smaller text size for comfortable smartphone reading
+    margin=dict(l=10, r=10, t=15, b=15), 
+    height=400 
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+# --- EXPANDABLE DATA BREAKDOWN ---
+with st.expander("🔍 View Raw Breakdown & Export Data"):
+    df_display = df_exp.sort_values(by="Amount", ascending=False).copy()
+    df_display["Amount"] = df_display["Amount"].map("${:,.2f}".format)
+    
+    st.dataframe(df_display, use_container_width=True, hide_index=True)
+    
+    csv = df_exp.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="📥 Download Expense Report (CSV)",
+        data=csv,
+        file_name="VTVA_Kalyanam_Expenses.csv",
+        mime="text/csv"
+    )
 
 # --- 5. FOOTER ---
 st.divider()
 
-foot_c1, foot_c2 = st.columns([3, 1])
+foot_c1, foot_c2 = st.columns([2, 1])
 with foot_c1:
-    st.caption("✅ Financial data verified by VTVA Treasury. For internal community review only.")
+    st.caption("✅ Financial data verified by VTVA Treasury. Internal review only.")
 
 with foot_c2:
     st.markdown(
-        f'<div style="text-align: right; font-family: sans-serif; font-size: 13px; color: #2e7d32; font-weight: bold;">'
-        f'📈 Total Dashboard Hits: {live_views}'
+        f'<div style="text-align: right; font-size: 12px; color: #2e7d32; font-weight: bold;">'
+        f'📈 Hits: {live_views}'
         f'</div>', 
         unsafe_allow_html=True
     )
