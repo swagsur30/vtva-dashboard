@@ -74,8 +74,8 @@ with col2:
 
 st.info("This dashboard provides a transparent view of the recent community event's financial performance.")
 
-# --- DATA PREPARATION ---
-total_exp = 4614.31
+# --- UPDATED DATA PREPARATION ---
+total_exp = 4692.16
 donations = 2001.00
 net_funding = total_exp - donations
 
@@ -97,9 +97,10 @@ chart_data = {
         "Pooja Supplies & Flowers",
         "Priest Dakshina",
         "Audio/Visual & Vastram",
-        "Venue Cooking Helpers"
+        "Venue Cooking Helpers",
+        "Miscellaneous (Dollar Store, Walmart, Home Depot)"
     ],
-    "Amount": [1885.87, 860.00, 630.52, 300.00, 197.87, 150.00]
+    "Amount": [1885.87, 860.00, 630.52, 300.00, 197.87, 150.00, 77.85]
 }
 df_exp = pd.DataFrame(chart_data)
 df_exp_sorted = df_exp.sort_values(by="Amount", ascending=True)
@@ -134,7 +135,7 @@ fig.update_layout(
     yaxis=dict(title=""),
     font=dict(size=12), 
     margin=dict(l=10, r=10, t=15, b=15), 
-    height=400 
+    height=450 
 )
 
 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
