@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # 1. Page Config
-st.set_page_config(page_title="VTVA Financials", layout="centered", page_icon="💰")
+st.set_page_config(page_title="VTVA Kalyanam Financials", layout="centered", page_icon="💰")
 
 # Custom CSS optimized for BOTH Light and Dark Mobile themes
 st.markdown("""
